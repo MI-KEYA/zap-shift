@@ -4,6 +4,8 @@ import Home from "../Pages/Home/Home/Home";
 import AuthLayout from "../Layouts/AuthLayout";
 import Login from "../Pages/Authentication/Login";
 import Register from "../Pages/Authentication/Register";
+import AboutUs from "../Pages/AboutUs/AboutUs";
+import Coverage from "../Pages/Coverage/Coverage";
 
 const router = createBrowserRouter([
     {
@@ -13,6 +15,14 @@ const router = createBrowserRouter([
             {
                 index: true,
                 Component: Home
+            },
+            {
+                path: '/aboutUs',
+                Component: AboutUs
+            },
+            {
+                path: '/coverage',
+                Component: Coverage
             }
         ]
     },
