@@ -12,14 +12,7 @@ const Coverage = () => {
                 We are Available in 64 Districts
             </h2>
 
-            {/* Search Input */}
-            <div className="flex justify-center">
-                <input
-                    type="text"
-                    placeholder="Search District..."
-                    className="input input-bordered w-full max-w-md"
-                />
-            </div>
+
 
             {/* Map Component */}
             <BangladeshMap />
