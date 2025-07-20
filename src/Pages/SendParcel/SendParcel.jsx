@@ -2,9 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import UseAuth from '../../hooks/UseAuth';
 import Swal from 'sweetalert2';
+import useAxiosSecure from '../../hooks/useAxiosSecure';
 
 const SendParcel = () => {
     const { user } = UseAuth();
+    const axiosSecure = useAxiosSecure();
+
     const {
         register,
         handleSubmit,
@@ -54,18 +57,40 @@ const SendParcel = () => {
         }
 
         return { baseCost, breakdown };
-    };
+    }; const now = new Date();
+    const trackingId = `TRK${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}${String(now.getSeconds()).padStart(2, '0')}-${Math.floor(100 + Math.random() * 900)}`;
 
     const saveParcel = (data, cost) => {
         const parcelData = {
             ...data,
             cost,
+            trackingId,
+            created_by: user.email,
+            payment_status: 'unpaid',
+            delivery_status: 'not_collected',
             weight: data.type === 'document' ? null : data.weight,
-            create_date: new Date().toISOString(),
+            create_date: new Date().toLocaleString('en-GB', { hour12: false }),
         };
+
+        // save data
+        axiosSecure.post('/parcels', parcelData)
+            .then(res => {
+                console.log(res.data);
+                if (res.data.insertedId) {
+                    // redirect to the payment gateway
+                    Swal.fire({
+                        title: 'Redirecting...',
+                        text: 'Processing to payment gateway.',
+                        icon: 'success',
+                        timer: 1500,
+                        showConfirmButton: false,
+                    });
+                }
+            })
+
         console.log('Saved Parcel:', parcelData);
-        Swal.fire('Success!', 'Parcel submitted successfully!', 'success');
-        reset();
+        // 
+        // reset();
     };
 
     const onSubmit = (data) => {
